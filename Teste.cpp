@@ -19,6 +19,85 @@ int s=0;
 int c=0;
 int v=0;
 
+void cadastrarCliente()
+{
+    int esc;
+    string nome, CPF, telefone, tipo;
+    cout << "O cliente é:" << endl;
+    cout << "1 - Mensalista" << endl;
+    cout << "2 - Diarista" << endl;
+    cout << "3 - Horista" << endl;
+    cout << "4 - Passageiro" << endl;
+    cin >> esc;
+    if(esc == 4){
+        nome = "";
+        CPF ="";
+        telefone="";
+        tipo="";
+    } else {
+        cout << "Insira o nome do cliente:" << endl;
+        while(getline(cin, nome))
+            if(nome != ""){
+            break;
+        }
+        cout << "CPF do cliente:" << endl;
+        cin >> CPF;
+        cout << "Telefone do Cliente" << endl;
+        getline(cin, telefone);
+        switch(esc){
+        case(1):
+            tipo="Mensalista"
+        break;
+        case(2):
+            tipo="Diarista"
+        break;
+        case(3):
+            tipo="Horista"
+        break;
+        }
+    }
+    clientes[c].cadastrarCliente(nome,CPF,tipo,telefone);
+}
+
+int procurarCliente(){
+    int f;
+    string procurado;
+    cout << "Insira algum dado do cliente, para procurar:" << endl;
+    while(getline(cin, procurado))
+        if(procurado != ""){
+        break;
+    }
+    for(int i=0;i<iterarClientes;i++){
+        if(procurado==clientes[i].nome){
+            return i;
+        }
+        if(procurado==clientes[i].CPF){
+            return i;
+        }
+        if(procurado==clientes[i].telefone){
+            return i;
+        }
+        if(procurado==clientes[i].id){
+            return i;
+        }
+    }
+
+}
+
+void entradaVeiculo()
+{
+    int esc, a;
+    cout << "Cliente existente?" << endl;
+    cout << "1 - Sim" << endl;
+    cout << "2 - Não" << endl;
+    cin >> esc;
+    if(esc == 1){
+        a = procurarCliente();
+        veiculos[a];
+    } else {
+        cadastrarCliente();
+    }
+}
 
 void inicio ()
 {
@@ -47,7 +126,9 @@ void inicio ()
 }
 
 int main(){
+
     setlocale(LC_ALL,"portuguese");
+
     ifstream in;
     ofstream out;
 
