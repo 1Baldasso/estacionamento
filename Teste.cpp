@@ -47,7 +47,7 @@ void inicio ()
 }
 
 int main(){
-
+    setlocale(LC_ALL,"portuguese");
     ifstream in;
     ofstream out;
 
@@ -55,3 +55,4 @@ int main(){
 
     return 0;
 }
+

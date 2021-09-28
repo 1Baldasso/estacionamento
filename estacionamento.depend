@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1632788293 source:c:\users\lucas\desktop\engs\trabalho_estacionamento\estacionamento\main.cpp
+	<iostream>
+	<locale.h>
+	<fstream>
+	"classes.h"
+
+1632787936 c:\users\lucas\desktop\engs\trabalho_estacionamento\estacionamento\classes.h
+
