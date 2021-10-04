@@ -2,10 +2,12 @@ using namespace std;
 
 class estacionamento
 {
+    public:
+
     int numVagas;
     double valorHora;
     int vagasReservadas;
-public:
+
     void sair(double horas)
     {
         vagasReservadas--;
@@ -22,7 +24,7 @@ public:
 class veiculo
 {
     public:
-    
+
     string placa;
     string cor;
     string modelo;
@@ -67,13 +69,19 @@ class cliente
 class vaga
 {
     public:
+
     int id;
     string descricao;
+    bool status;
+    
+    
 };
 
 
 class movimentacao
 {
+    public:
+
     int id;
     string horario;
     string data;

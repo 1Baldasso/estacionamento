@@ -14,10 +14,10 @@ vaga vagas[TAM];
 cliente clientes[TAMMAX];
 veiculo veiculos[TAMMAX];
 
-int e=0;
-int s=0;
-int c=0;
-int v=0;
+int e=0; // entrada
+int s=0; // saida
+int c=0; // cliente
+int v=0; // vaga
 
 int iterarClientes(){
     for(int i=0;i<TAMMAX;i++){
@@ -65,6 +65,7 @@ void cadastrarCliente()
         }
     }
     clientes[c].cadastrarCliente(nome,CPF,tipo,telefone);
+    c++;
 }
 
 int procurarCliente(){
@@ -105,7 +106,14 @@ void entradaVeiculo()
 }
 
 void listaCarros(){
-
+    for (int i=0;i<TAM;i++){
+        if(vagas[i].status){
+            cout << "Vaga número: " << i+1 << endl;
+            cout << "Status: OCUPADO" << endl;
+            cout << "Veículo: " << vagas[i].carro.modelo << " Placa: " << vagas[i].carro.placa << endl;
+            cout << "Cliente: " << vagas[i].ocupando.nome << " Tipo: " << vagas[i].ocupando.tipoCliente << endl;
+        }
+    }
 }
 
 void inicio ()
