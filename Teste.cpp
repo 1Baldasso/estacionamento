@@ -1,8 +1,10 @@
 #include <iostream>
 #include <locale.h>
 #include <fstream>
+#include <ctime>
 #include "classes.h"
 
+#define CLS system("pause")
 #define TAM 10
 #define TAMMAX 100
 
@@ -18,6 +20,31 @@ int e=0; // entrada
 int s=0; // saida
 int c=0; // cliente
 int v=0; // vaga
+
+string mes, dia, hora, ano, diaSem, minuto;
+
+
+void atualizarHora(){
+    time_t agora = time(0);
+    char* agoraC = ctime(&agora);
+    string agoraS = agoraC;
+    diaSem = agoraS.substr(0,3);
+    mes = agoraS.substr(4,3);
+    dia = agoraS.substr(8,2);
+    hora = agoraS.substr(11,2);
+    minuto = agoraS.substr(14,2);
+    ano = agoraS.substr(20,4);
+}
+
+double valorSaida(){
+    int tempo;
+    if(entrada[e].minuto<saida[s].minuto){
+        tempo = (entrada[e].hora-saida[s].hora)*60;
+        tempo = tempo + (entrada[e].minuto-saida[s].minuto);
+    }
+    tempo = tempo/60;
+    return tempo*6;
+}
 
 int iterarClientes(){
     for(int i=0;i<TAMMAX;i++){
@@ -103,6 +130,9 @@ void entradaVeiculo()
     } else {
         cadastrarCliente();
     }
+    atualizarHora();
+    entrada[e].data = (dia+"/"+mes+"/"+ano);
+    entrada[e].horario = hora;
 }
 
 void listaCarros(){
@@ -116,8 +146,19 @@ void listaCarros(){
     }
 }
 
+int vagasDisp(){
+    int nT=0;
+    for(int i=0;i<TAM;i++){
+        if(!vagas[i].status){
+            nT++;
+        }
+    }
+    return nT;
+}
+
 void inicio ()
 {
+    CLS;
     int esc;
     cout << "1 - Entrada de carros" << endl;
     cout << "2 - Saída de carros" << endl;
@@ -146,8 +187,10 @@ int main(){
 
     setlocale(LC_ALL,"portuguese");
 
-    ifstream in;
-    ofstream out;
+    atualizarHora();
+
+    cout << diaSem << ", " << dia << " de " << mes << " de " << ano << " às " << hora << ":" << minuto << endl;
+
 
     inicio();
 

@@ -84,7 +84,11 @@ class movimentacao
     public:
 
     int id;
+    int hora;
+    int minuto;
     string horario;
     string data;
+    vaga lugar;
+    cliente consumidor;
 };
 
