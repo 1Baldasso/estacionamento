@@ -73,7 +73,6 @@ class vaga
     int id;
     string descricao;
     bool status;
-    veiculo carro;
     cliente ocupando;
 
 };
