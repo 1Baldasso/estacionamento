@@ -186,6 +186,14 @@ int procurarCliente(){
 
 }
 
+void atribuirClienteVaga(int aVaga, int aCliente){
+    vagas[aVaga].ocupando.nome=clientes[aCliente].nome;
+    vagas[aVaga].ocupando.tipoCliente=clientes[aCliente].tipoCliente;
+    vagas[aVaga].ocupando.telefone=clientes[aCliente].telefone;
+    vagas[aVaga].ocupando.carro.placa=clientes[aCliente].carro.placa;
+    vagas[aVaga].ocupando.carro.modelo=clientes[aCliente].carro.modelo;
+}
+
 void entradaVeiculo()
 {
     CLS;
@@ -199,6 +207,7 @@ void entradaVeiculo()
         entrada[e].consumidor.nome=clientes[a].nome;
         entrada[e].consumidor.carro.placa=clientes[a].carro.placa;
     } else {
+        a = c;
         cadastrarCliente(1);
     }
     atualizarHora();
@@ -207,6 +216,8 @@ void entradaVeiculo()
     cout << "Vaga em que o carro foi estacionado?" << endl;
     cin >> esc;
     entrada[e].lugar.id=esc;
+    vagas[esc-1].status=true;
+    atribuirClienteVaga(esc-1,a);
     e++;
     cout << "Carro estacionado na vaga " << esc << endl;
     PAUSE;
@@ -230,9 +241,12 @@ void saidaVeiculo(){
     cin >> placa;
     a = procurarPlaca(placa);
     atualizarHora();
-    saida[s].data = (dia+"/"+MestoInt(mes)+"/"+ano);
+    saida[s].data = (dia+"/"+mes+"/"+ano);
     saida[s].horario = hora;
     valor=valorSaida(a,s);
+    /*
+    FAZER RETIRADA DO VEÍCULO DA VAGA
+    */
     cout << setprecision(2) << "O valor do estacionamento ficou em: R$" << valor << endl;
     s++;
     PAUSE;
@@ -248,6 +262,8 @@ void listaCarros(){
             cout << "Cliente: " << vagas[i].ocupando.nome << " Tipo: " << vagas[i].ocupando.tipoCliente << endl;
         }
     }
+    PAUSE;
+    inicio();
 }
 
 int vagasDisp(){
