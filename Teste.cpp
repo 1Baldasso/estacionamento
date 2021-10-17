@@ -3,6 +3,8 @@
 #include <fstream>
 #include <ctime>
 #include <iomanip>
+#include <string.h>
+#include <string>
 #include "classes.h"
 
 #define PAUSE system("pause")
@@ -28,6 +30,110 @@ string mes, dia, hora, ano, diaSem, minuto;
 using namespace std;
 
 void inicio();
+int iterarClientes();
+
+
+void iterarAPI(){
+    ifstream api;
+    api.open("clientes.txt");
+    string a;
+    if(api.is_open()){
+        for(c=0;!api.eof();c++){
+            getline(api,a);
+            clientes[c].id = stoi(("0"+a));
+            getline(api,clientes[c].nome);
+            getline(api,clientes[c].CPF);
+            getline(api,clientes[c].telefone);
+            getline(api,clientes[c].tipoCliente);
+            getline(api,clientes[c].carro.placa);
+            getline(api,clientes[c].carro.modelo);
+            getline(api,clientes[c].carro.marca);
+            getline(api,clientes[c].carro.cor);
+            getline(api,a);
+        }
+    }
+    api.close();
+    api.open("entradas_outubro.txt");
+    if (api.is_open()){
+        for(e=0;!api.eof();e++){
+            getline(api,a);
+            entrada[e].id=stoi(("0"+a));
+            getline(api,entrada[e].data);
+            getline(api,entrada[e].horario);
+            getline(api,a);
+            entrada[e].lugar.id=stoi(("0"+a));
+            vagas[entrada[e].lugar.id-1].status=true;
+            getline(api,entrada[e].lugar.ocupando.nome);
+            getline(api,entrada[e].lugar.ocupando.carro.placa);
+            getline(api,a);
+        }
+    }api.close();
+    api.open("saida_outubro.txt");
+    if (api.is_open()
+        ){
+        for(s=0;!api.eof();s++){
+            getline(api,a);
+            saida[s].id=stoi(("0"+a));
+            getline(api,saida[s].data);
+            getline(api,saida[s].horario);
+            getline(api,a);
+            saida[s].lugar.id=stoi(("0"+a));
+            vagas[saida[s].lugar.id-1].status=false;
+            getline(api,saida[s].lugar.ocupando.nome);
+            getline(api,saida[s].lugar.ocupando.carro.placa);
+            getline(api,a);
+        }
+    }
+
+}
+void adicionarAPI(string nome){
+    ofstream api;
+    api.open((nome+".txt"));
+    if(api.is_open()){
+        for(int i=0;i<c;i++){
+            api << clientes[i].id << '\n';
+            api << clientes[i].nome << '\n';
+            api << clientes[i].CPF << '\n';
+            api << clientes[i].telefone << '\n';
+            api << clientes[i].tipoCliente << '\n';
+            api << clientes[i].carro.placa << '\n';
+            api << clientes[i].carro.modelo << '\n';
+            api << clientes[i].carro.marca << '\n';
+            api << clientes[i].carro.cor << '\n';
+            api << '\n';
+        }
+    }
+}
+void adicionarAPIentrada(string nome){
+    ofstream api;
+    api.open((nome+".txt"));
+    if(api.is_open()){
+        for(int i=0;i<e;i++){
+            api << entrada[i].id << '\n';
+            api << entrada[i].data << '\n';
+            api << entrada[i].horario << '\n';
+            api << entrada[i].lugar.id << '\n';
+            api << entrada[i].lugar.ocupando.nome << '\n';
+            api << entrada[i].lugar.ocupando.carro.placa << '\n';
+            api << '\n';
+        }
+    }
+}
+void adicionarAPIsaida(string nome){
+    ofstream api;
+    api.open((nome+".txt"));
+    if(api.is_open()){
+        for(int i=0;i<s;i++){
+            api << saida[i].id << '\n';
+            api << saida[i].data << '\n';
+            api << saida[i].horario << '\n';
+            api << saida[i].lugar.id << '\n';
+            api << saida[i].lugar.ocupando.nome << '\n';
+            api << saida[i].lugar.ocupando.carro.placa << '\n';
+            api << '\n';
+        }
+    }
+}
 
 void atualizarHora(){
     time_t agora = time(0);
@@ -36,7 +142,7 @@ void atualizarHora(){
     diaSem = agoraS.substr(0,3);
     mes = agoraS.substr(4,3);
     dia = agoraS.substr(8,2);
-    hora = agoraS.substr(11,2);
+    hora = agoraS.substr(11,5);
     minuto = agoraS.substr(14,2);
     ano = agoraS.substr(20,4);
 }
@@ -99,12 +205,31 @@ int MestoInt(string mes){
 
 double valorSaida(int ent, int sai){
     int tempo;
-    if(entrada[ent].minuto<saida[sai].minuto){
-        tempo = (entrada[ent].hora-saida[sai].hora)*60;
-        tempo = tempo + (entrada[ent].minuto-saida[sai].minuto);
+    if(entrada[ent].mes!=saida[sai].mes){
+        if(entrada[ent].dia!=saida[sai].dia){
+            if(entrada[ent].dia<saida[sai].dia && (saida[sai].mes-entrada[ent].mes)<1){
+                tempo=entrada[ent].dia-saida[sai].dia;
+                return tempo*25;
+            }else{
+                tempo = (entrada[ent].mes-saida[sai].mes);
+                return tempo * 600;
+            }
+        }
+    } else if(entrada[ent].dia!=saida[sai].dia){
+        tempo=entrada[ent].dia-saida[sai].dia;
+        return tempo*25;
+    }else{
+        if(entrada[ent].minuto<saida[sai].minuto){
+            tempo = (entrada[ent].hora-saida[sai].hora)*60;
+            tempo = tempo + (entrada[ent].minuto-saida[sai].minuto);
+        }
+        tempo = tempo/60;
+        if (tempo < 30 ){
+            return 3.5;
+        }
+        return tempo*6;
     }
-    tempo = tempo/60;
-    return tempo*6;
+
 }
 
 int iterarClientes(){
@@ -156,8 +281,9 @@ void cadastrarCliente(bool cont)
         }
     }
     cadastrarCarro();
-    clientes[c].cadastrarCliente(nome,CPF,tipo,telefone);
+    clientes[c].cadastrarCliente(nome,CPF,tipo,telefone,c+1);
     c++;
+    adicionarAPI("clientes");
     if (!cont){
         inicio();
     }
@@ -192,6 +318,11 @@ void atribuirClienteVaga(int aVaga, int aCliente){
     vagas[aVaga].ocupando.telefone=clientes[aCliente].telefone;
     vagas[aVaga].ocupando.carro.placa=clientes[aCliente].carro.placa;
     vagas[aVaga].ocupando.carro.modelo=clientes[aCliente].carro.modelo;
+    entrada[e].lugar.ocupando.nome=clientes[aCliente].nome;
+    entrada[e].lugar.ocupando.tipoCliente=clientes[aCliente].tipoCliente;
+    entrada[e].lugar.ocupando.telefone=clientes[aCliente].telefone;
+    entrada[e].lugar.ocupando.carro.placa=clientes[aCliente].carro.placa;
+    entrada[e].lugar.ocupando.carro.modelo=clientes[aCliente].carro.modelo;
 }
 
 void entradaVeiculo()
@@ -212,6 +343,9 @@ void entradaVeiculo()
     }
     atualizarHora();
     entrada[e].data = (dia+"/"+mes+"/"+ano);
+    entrada[e].id = e+1;
+    entrada[e].dia = stoi(dia);
+    entrada[e].mes = MestoInt(mes);
     entrada[e].horario = hora;
     cout << "Vaga em que o carro foi estacionado?" << endl;
     cin >> esc;
@@ -219,9 +353,18 @@ void entradaVeiculo()
     vagas[esc-1].status=true;
     atribuirClienteVaga(esc-1,a);
     e++;
+    adicionarAPIentrada("entradas_outubro");
     cout << "Carro estacionado na vaga " << esc << endl;
     PAUSE;
     inicio();
+}
+
+int procurarVagas(string placa){
+    for(int i=0;i<TAMMAX;i++){
+        if(vagas[i].ocupando.carro.placa==placa){
+            return i;
+        }
+    }
 }
 
 int procurarPlaca(string placa){
@@ -242,13 +385,16 @@ void saidaVeiculo(){
     a = procurarPlaca(placa);
     atualizarHora();
     saida[s].data = (dia+"/"+mes+"/"+ano);
+    saida[s].mes = MestoInt(mes);
+    saida[s].dia = stoi(dia);
     saida[s].horario = hora;
     valor=valorSaida(a,s);
-    /*
-    FAZER RETIRADA DO VEÍCULO DA VAGA
-    */
+    vagas[procurarVagas(placa)].status=false;
+
     cout << setprecision(2) << "O valor do estacionamento ficou em: R$" << valor << endl;
+
     s++;
+    adicionarAPIsaida("saidas_outubro");
     PAUSE;
     inicio();
 }
@@ -286,6 +432,26 @@ void verVagas(){
     inicio();
  }
 
+void visualizarEeS(){
+        cout << "\t\tENTRADA\t\t" << endl;
+    for(int i=0;i<e-1;i++){
+        cout << entrada[i].id << " - " << entrada[i].data << " às " << entrada[i].horario << endl;
+        cout << "Nome: " << entrada[i].lugar.ocupando.nome << "\tCarro: " << entrada[i].lugar.ocupando.carro.modelo << "\tPlaca: " << entrada[i].lugar.ocupando.carro.placa << endl;
+        cout << "Estacionado na vaga " << entrada[i].lugar.id << endl;
+        cout << "------------------" << endl;
+    }
+        cout << "\t\tSAIDA\t\t" << endl;
+        for(int i=0;i<s;i++){
+        cout << saida[i].id << " - " << saida[i].data << " às " << saida[i].horario << endl;
+        cout << "Nome: " << saida[i].lugar.ocupando.nome << "\tCarro: " << saida[i].lugar.ocupando.carro.modelo << "\tPlaca: " << saida[i].lugar.ocupando.carro.placa << endl;
+        cout << "Estacionado na vaga " << saida[i].lugar.id << endl;
+        cout << "------------------" << endl;
+    }
+    PAUSE;
+    inicio();
+}
+
+
 void inicio ()
 {
     CLS;
@@ -295,6 +461,7 @@ void inicio ()
     cout << "3 - Lista de carros estacionados" << endl;
     cout << "4 - Cadastrar novo cliente" << endl;
     cout << "5 - Vagas disponíveis" << endl;
+    cout << "6 - Visualizar Entradas e Saidas" << endl;
     cin >> esc;
     switch(esc){
     case(1):
@@ -312,13 +479,15 @@ void inicio ()
     case(5):
         verVagas();
     break;
+    case(6):
+        visualizarEeS();
     }
 }
 
 int main(){
 
     setlocale(LC_ALL,"portuguese");
-
+    iterarAPI();
     inicio();
 
     return 0;

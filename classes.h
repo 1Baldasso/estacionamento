@@ -45,10 +45,11 @@ class cliente
     veiculo carro;
 
 
-    void cadastrarCliente(string aNome, string aCPF, string aTipo, string aTelefone)
+    void cadastrarCliente(string aNome, string aCPF, string aTipo, string aTelefone, int aID)
     {
         nome=aNome;
         CPF=aCPF;
+        id=aID;
         tipoCliente=aTipo;
         telefone=aTelefone;
     }
@@ -74,6 +75,8 @@ class movimentacao
     int id;
     int hora;
     int minuto;
+    int dia;
+    int mes;
     string horario;
     string data;
     vaga lugar;
