@@ -204,8 +204,8 @@ void entradaVeiculo()
     cin >> esc;
     if(esc == 1){
         a = procurarCliente();
-        entrada[e].consumidor.nome=clientes[a].nome;
-        entrada[e].consumidor.carro.placa=clientes[a].carro.placa;
+        entrada[e].lugar.ocupando.nome=clientes[a].nome;
+        entrada[e].lugar.ocupando.carro.placa=clientes[a].carro.placa;
     } else {
         a = c;
         cadastrarCliente(1);
@@ -258,8 +258,8 @@ void listaCarros(){
         if(vagas[i].status){
             cout << "Vaga número: " << i+1 << endl;
             cout << "Status: OCUPADO" << endl;
-            cout << "Veículo: " << vagas[i].ocupando.carro.modelo << " Placa: " << vagas[i].ocupando.carro.placa << endl;
-            cout << "Cliente: " << vagas[i].ocupando.nome << " Tipo: " << vagas[i].ocupando.tipoCliente << endl;
+            cout << "Veículo: " << vagas[i].ocupando.carro.modelo << "          Placa: " << vagas[i].ocupando.carro.placa << endl;
+            cout << "Cliente: " << vagas[i].ocupando.nome << "          Tipo: " << vagas[i].ocupando.tipoCliente << endl;
         }
     }
     PAUSE;
@@ -318,11 +318,6 @@ void inicio ()
 int main(){
 
     setlocale(LC_ALL,"portuguese");
-
-    atualizarHora();
-
-    cout << diaSem << ", " << dia << " de " << mes << " de " << ano << " às " << hora << ":" << minuto << endl;
-
 
     inicio();
 

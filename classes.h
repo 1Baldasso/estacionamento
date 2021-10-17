@@ -8,17 +8,6 @@ class estacionamento
     double valorHora;
     int vagasReservadas;
 
-    void sair(double horas)
-    {
-        vagasReservadas--;
-        numVagas++;
-        cout << "O valor a ser pago é:" << valorHora*horas << endl;
-    }
-    void entrar ()
-    {
-        numVagas--;
-        vagasReservadas++;
-    }
 };
 
 class veiculo
@@ -88,6 +77,5 @@ class movimentacao
     string horario;
     string data;
     vaga lugar;
-    cliente consumidor;
 };
 
